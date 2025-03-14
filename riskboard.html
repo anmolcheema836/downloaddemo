@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download Hello.txt & Installer Wizard</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+      color: #34495e;
+    }
+    p {
+      margin-bottom: 20px;
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .btn {
+      background: linear-gradient(90deg, #3498db, #2980b9);
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      display: block;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #2980b9, #1c5980);
+    }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+    }
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+      text-align: left;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      color: #aaa;
+      cursor: pointer;
+    }
+    .close:hover {
+      color: #000;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #3498db;
+      font-size: 1.5rem;
+    }
+    .modal-content p {
+      font-size: 1rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+    .modal-content ol {
+      padding-left: 20px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .finish-btn {
+      background: linear-gradient(90deg, #27ae60, #1e8449);
+      color: #fff;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+    .finish-btn:hover {
+      background: linear-gradient(90deg, #1e8449, #166f39);
+    }
+    /* Mobile Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+      p, .modal-content p {
+        font-size: 0.9rem;
+      }
+      .btn, .finish-btn {
+        font-size: 0.9rem;
+        padding: 12px 20px;
+      }
+      .modal-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Software Installer Demo</h1>
+    <p>Click the button below to download <strong>hello.txt</strong> and launch the installer wizard.</p>
+    <button id="downloadBtn" class="btn">Download Hello.txt</button>
+  </div>
+
+  <!-- Installer Wizard Modal -->
+  <div id="installerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <h2>Installer Wizard</h2>
+      <p>The file <strong>hello.txt</strong> has been downloaded.</p>
+      <p>Please follow these steps to complete the process:</p>
+      <ol>
+        <li>Locate the <strong>hello.txt</strong> file in your Downloads folder.</li>
+        <li>Open the file to verify its contents.</li>
+        <li>Follow any further instructions if needed.</li>
+      </ol>
+      <button id="finishBtn" class="finish-btn">Finish</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to create and download hello.txt with "Hello, World!" content
+    function downloadHelloTxt() {
+      const content = "Hello, World!";
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'hello.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      // Release the object URL after a short delay
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    }
+
+    // Show modal wizard
+    function showWizard() {
+      document.getElementById('installerModal').style.display = 'block';
+    }
+
+    // Download button click handler
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      downloadHelloTxt();
+      // Simulate a delay before showing the wizard (e.g., 2 seconds)
+      setTimeout(showWizard, 2000);
+    });
+
+    // Close modal handlers
+    document.getElementById('closeModal').addEventListener('click', function() {
+      document.getElementById('installerModal').style.display = 'none';
+    });
+    document.getElementById('finishBtn').addEventListener('click', function() {
+      document.getElementById('installerModal').style.display = 'none';
+    });
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('installerModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
